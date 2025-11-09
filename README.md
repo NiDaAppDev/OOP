@@ -1,2 +1,2 @@
 # OOP
-HUJI OOP Projects, By Nitzan Daloomy &amp; Tomer Levy
+HUJI OOP Projects, By Nitzan Daloomy &amp; Tomer Levi
