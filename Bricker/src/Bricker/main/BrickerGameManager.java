@@ -4,14 +4,10 @@ import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.*;
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import gameobjects.Ball;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Vector;
+import gameobjects.Paddle;
 
 public class BrickerGameManager extends GameManager {
 
@@ -24,29 +20,29 @@ public class BrickerGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
 
         windowController.setTargetFramerate(80);
-
         Vector2 windowDimensions = windowController.getWindowDimensions();
         Vector2 windowCenter = windowDimensions.mult(0.5f);
 
-
+        Sound collisionSound = soundReader.readSound("assets/blop.wav");
+        Renderable ballImage =
+                imageReader.readImage("assets/ball.png", true);
+        Renderable paddleImage =
+                imageReader.readImage("assets/paddle.png", true);
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg", true);
+
         GameObject background = new GameObject(Vector2.ZERO, new Vector2(windowDimensions.x(), windowDimensions.y()), backgroundImage);
 
         gameObjects().addGameObject(background, Layer.BACKGROUND);
+
         //creating ball.
-        Renderable ballImage =
-            imageReader.readImage("assets/ball.png", true);
-        Sound collisionSound = soundReader.readSound("assets/blop.wav");
         GameObject ball = new Ball(Vector2.ZERO, new Vector2(50, 50), ballImage, collisionSound);
         ball.setVelocity(Vector2.DOWN.mult(500));
         ball.setCenter(windowCenter);
 
         gameObjects().addGameObject(ball);
 
-        Renderable paddleImage =
-                imageReader.readImage("assets/paddle.png", true);
         //create user paddle
-        GameObject userPaddle = new GameObject(Vector2.ZERO, new Vector2(200, 15), paddleImage);
+        GameObject userPaddle = new Paddle(Vector2.ZERO, new Vector2(200, 15), paddleImage, inputListener);
         userPaddle.setCenter(new Vector2(windowDimensions.x() / 2, (int)windowDimensions.y()-30));
 
         //create ai paddle
@@ -55,6 +51,7 @@ public class BrickerGameManager extends GameManager {
 
         gameObjects().addGameObject(userPaddle);
         gameObjects().addGameObject(aiPaddle);
+
         createWalls(windowDimensions);
     }
 
